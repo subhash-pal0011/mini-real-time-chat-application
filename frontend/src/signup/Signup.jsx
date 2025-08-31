@@ -37,7 +37,7 @@ const Signup = () => {
         headers: { "Content-Type": "multipart/form-data" }, // ISKA MTLB HII >> Jab hum file (jaise image, video, pdf) ke sath data send karte hain, to normal JSON body kaam nahi karti.   Uske liye browser ek special format use karta hai jiska naam hai → multipart/form-data.
       });
 
-      const result = res.data;  // ✅ res se data nikala
+      const result = res.data || { success: false, message: "No response from server" };  // ✅ res se data nikala
       console.log(result)
       // Backend se aaya message
       toast.success(result.message || "Signup successful 🎉");
