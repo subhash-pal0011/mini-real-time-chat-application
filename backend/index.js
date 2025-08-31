@@ -69,7 +69,6 @@
 
 
 
-// backend/index.js
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
@@ -98,11 +97,12 @@ socketApp.use(express.json());
 socketApp.use(express.urlencoded({ extended: true }));
 socketApp.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-// CORS: DEV + PROD
-const FRONTEND_URL = process.env.FRONTEND_URL; // deployed frontend
-const DEV_URL = process.env.DEV_URL;           // localhost frontend
+// CORS
 socketApp.use(cors({
-    origin: [process.env.FRONTEND_URL, process.env.DEV_URL],
+    origin: [
+        "https://conversationhub.onrender.com", // remove trailing slash
+        "http://localhost:5173"
+    ],
     credentials: true
 }));
 
@@ -118,13 +118,16 @@ socketApp.use('/api/getmessage', getRouter);
 socketApp.use('/api/search', searchRouter);
 socketApp.use('/api/chatprofile', chatProfile);
 
-// Optional: Frontend static serve (if backend is serving frontend)
-socketApp.use(express.static(path.join(__dirname, "/frontend/dist")));
-socketApp.get(/.*/, (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-});
+// Optional: Frontend static serve (only in production)
+if (process.env.NODE_ENV === 'production') {
+    socketApp.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-// 404 handler
+    socketApp.get(/.*/, (req, res) => {
+        res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+    });
+}
+
+// 404 handler (after all routes)
 socketApp.use((req, res, next) => {
     res.status(404).json({
         success: false,
@@ -141,3 +144,4 @@ mongoose.connect(process.env.MONGO_URL)
 
 // Start server
 socketServer.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
