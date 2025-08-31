@@ -7,7 +7,10 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
        cors: {
-              origin: "https://conversationhub.onrender.com",
+              origin: [
+                     process.env.FRONTEND_URL || "https://conversationhub.onrender.com",
+                     process.env.DEV_URL || "http://localhost:5173"
+              ],
               methods: ["GET", "POST"],
        },
 });
@@ -37,6 +40,9 @@ io.on('connection', (socket) => {
 export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
 
 export { app, server, io };
+
+
+
 
 
 

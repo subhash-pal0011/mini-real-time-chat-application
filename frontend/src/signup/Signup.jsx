@@ -38,7 +38,7 @@ const Signup = () => {
       });
 
       const result = res.data;  // ✅ res se data nikala
-
+      console.log(result)
       // Backend se aaya message
       toast.success(result.message || "Signup successful 🎉");
 
