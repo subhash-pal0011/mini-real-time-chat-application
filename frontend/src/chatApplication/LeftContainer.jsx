@@ -133,7 +133,7 @@ const LeftContainer = () => {
         <motion.img
           src={
             user?.profilepic?.startsWith("/")
-              ? `http://localhost:8000${user.profilepic}`
+              ? `https://chatify-backend-ybm4.onrender.com${user.profilepic}`
               : user?.profilepic || "/default-avatar.png"
           }
           alt="profile"
@@ -188,7 +188,7 @@ const LeftContainer = () => {
                     <img
                       src={
                         u?.profilepic?.startsWith("/")
-                          ? `http://localhost:8000${u.profilepic}`
+                          ? `https://chatify-backend-ybm4.onrender.com${u.profilepic}`
                           : u?.profilepic || "/default-avatar.png"
                       }
                       alt={u.fullname}
@@ -222,7 +222,7 @@ const LeftContainer = () => {
                     <img
                       src={
                         c?.profilepic?.startsWith("/")
-                          ? `http://localhost:8000${c.profilepic}`
+                          ? `https://chatify-backend-ybm4.onrender.com${c.profilepic}`
                           : c?.profilepic || "/default-avatar.png"
                       }
                       alt={c.fullname}

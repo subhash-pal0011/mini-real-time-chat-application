@@ -120,7 +120,7 @@ const RightContainer = () => {
           <img
             src={
               selectedConversation?.profilepic?.startsWith("/")
-                ? `http://localhost:8000${selectedConversation.profilepic}`
+                ? `https://chatify-backend-ybm4.onrender.com${selectedConversation.profilepic}`
                 : selectedConversation?.profilepic || "/default-avatar.png"
             }
             alt={selectedConversation?.fullname || "User"}
