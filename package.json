@@ -1,0 +1,14 @@
+{
+  "name": "mini-chat-application",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon backend/index.js",
+    "start": "node backend/index.js",
+    "build": "npm install --prefix frontend && npm run build --prefix frontend"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
