@@ -52,6 +52,9 @@
 
 
 
+
+
+// frontend/context/SocketContext.js
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useUser } from "./UserContext";
@@ -67,46 +70,26 @@ export const SocketContextProvider = ({ children }) => {
   useEffect(() => {
     if (!user) return;
 
-    console.log("[SOCKET] Connecting for user:", user._id);
-
-    // ✅ Socket connection
-    const socketInstance = io("https://chatify-backend-ybm4.onrender.com", {
-      auth: { userId: user._id }, // recommended way
-      transports: ["websocket"],   // force websocket only
+    const socketInstance = io(process.env.VITE_BACKEND_URL || "http://localhost:3000", {
+      auth: { userId: user._id }, // recommended
+      transports: ["websocket"],
     });
 
-    // Handlers
-    const handleOnlineUsers = (users) => {
-      console.log("[SOCKET] Online users updated:", users);
-      setOnlineUser(Array.isArray(users) ? users : []);
-    };
+    socketInstance.on("connect", () => console.log("[SOCKET] Connected:", socketInstance.id));
+    socketInstance.on("connect_error", (err) => console.error("[SOCKET] Error:", err));
 
-    const handleReceiveMessage = ({ from, message }) => {
-      console.log("[SOCKET] Message received from:", from, "Message:", message);
-      // aap yahan GlobellyMessage me update kar sakte ho
-    };
-
-    // Socket events
-    socketInstance.on("connect", () => console.log("[SOCKET] Connected ID:", socketInstance.id));
-    socketInstance.on("connect_error", (err) => console.error("[SOCKET] Connection error:", err));
-    socketInstance.on("getOnlineUser", handleOnlineUsers);
-    socketInstance.on("receiveMessage", handleReceiveMessage);
+    socketInstance.on("getOnlineUser", (users) => setOnlineUser(users || []));
+    socketInstance.on("receiveMessage", ({ from, message }) => {
+      console.log("Message received from", from, ":", message);
+    });
 
     setSocket(socketInstance);
 
-    // Cleanup
     return () => {
-      console.log("[SOCKET] Disconnecting for user:", user._id);
-      socketInstance.off("getOnlineUser", handleOnlineUsers);
-      socketInstance.off("receiveMessage", handleReceiveMessage);
       socketInstance.disconnect();
       setSocket(null);
     };
   }, [user]);
 
-  return (
-    <SocketContext.Provider value={{ socket, onlineUser }}>
-      {children}
-    </SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={{ socket, onlineUser }}>{children}</SocketContext.Provider>;
 };
