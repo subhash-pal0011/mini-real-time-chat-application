@@ -15,6 +15,7 @@
     "framer-motion": "^12.23.12",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.540.0",
+    "mini-chat-application": "file:..",
     "path": "^0.12.7",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
