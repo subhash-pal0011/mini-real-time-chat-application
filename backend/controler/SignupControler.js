@@ -33,7 +33,7 @@ export const Signup = async (req, res) => {
         // HUM FIND IS LIYE EMAIL AND USERNAME PE KR RHE HII KYUKI INHI DONO KO UNIQUE BANAYA HII SCHEMA PR
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
-            return res.status(409).send({
+            return res.status(409).json({
                 success: false, message: existingUser.email === email
                     ? "Email already exists!"
                     : "Username already exists!"
@@ -66,7 +66,7 @@ export const Signup = async (req, res) => {
 
 
         // HUMKO FRONTEND MEA KYA KYA DIKHNA HII
-        res.status(201).send({
+        res.status(201).json({
             success: true,
             message: `welcome ${username} 🎉`,
             user: {
@@ -80,7 +80,7 @@ export const Signup = async (req, res) => {
     }
     catch (error) {
         console.error("Signup error:", error.message);
-        res.status(500).send({ success: false, message: "Server error during signup ❌" });
+        res.status(500).json({ success: false, message: "Server error during signup ❌" });
     }
 };
 
