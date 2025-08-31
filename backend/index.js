@@ -86,7 +86,8 @@ import searchRouter from './router/SearchRouter.js';
 import chatProfile from './router/CahtProfileRouter.js';
 
 // Socket
-import { app as socketApp, server as socketServer, io } from './Socket/socket.js';
+import { app as socketApp, server as socketServer } from './Socket/socket.js';
+import { Server as SocketIO } from 'socket.io';
 
 const __dirname = path.resolve();
 dotenv.config({ path: "./backend/.env" });
@@ -97,10 +98,10 @@ socketApp.use(express.json());
 socketApp.use(express.urlencoded({ extended: true }));
 socketApp.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-// CORS
+// Express CORS
 socketApp.use(cors({
     origin: [
-        "https://conversationhub.onrender.com", // remove trailing slash
+        "https://conversationhub.onrender.com",
         "http://localhost:5173"
     ],
     credentials: true
@@ -118,16 +119,15 @@ socketApp.use('/api/getmessage', getRouter);
 socketApp.use('/api/search', searchRouter);
 socketApp.use('/api/chatprofile', chatProfile);
 
-// Optional: Frontend static serve (only in production)
+// Serve frontend in production
 if (process.env.NODE_ENV === 'production') {
     socketApp.use(express.static(path.join(__dirname, "../frontend/dist")));
-
     socketApp.get(/.*/, (req, res) => {
         res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
     });
 }
 
-// 404 handler (after all routes)
+// 404 handler
 socketApp.use((req, res, next) => {
     res.status(404).json({
         success: false,
@@ -135,12 +135,29 @@ socketApp.use((req, res, next) => {
     });
 });
 
-// MongoDB
+// MongoDB connection
 const PORT = process.env.PORT || 3000;
 
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log('MongoDB connected ✅'))
     .catch(err => console.error('MongoDB connection error:', err.message));
+
+// Socket.io with CORS
+const io = new SocketIO(socketServer, {
+    cors: {
+        origin: ["https://conversationhub.onrender.com", "http://localhost:5173"],
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
+
+io.on('connection', (socket) => {
+    console.log('Socket connected:', socket.id);
+
+    socket.on('disconnect', () => {
+        console.log('Socket disconnected:', socket.id);
+    });
+});
 
 // Start server
 socketServer.listen(PORT, () => console.log(`Server running on port ${PORT}`));
