@@ -266,16 +266,30 @@ const Signup = () => {
           </div>
 
           {/* Gender */}
+          {/* Gender */}
           <div className="flex gap-6 items-center text-gray-300">
-            {["male", "female"].map((g) => (
-              <label key={g} className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" {...register("gender", { required: true })} value={g} className="hidden peer" />
-                <div className={`w-5 h-5 rounded-full border-2 border-gray-400 peer-checked:${g === "male" ? "border-blue-500 bg-blue-500" : "border-pink-500 bg-pink-500"} transition-all`}></div>
-                <span className={`peer-checked:text-${g === "male" ? "blue" : "pink"}-400`}>{g.charAt(0).toUpperCase() + g.slice(1)}</span>
-              </label>
-            ))}
-          </div>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                {...register("gender", { required: true })}
+                value="male"
+                className="hidden peer"
+              />
+              <div className="w-5 h-5 rounded-full border-2 border-gray-400 peer-checked:border-blue-500 peer-checked:bg-blue-500 transition-all"></div>
+              <span className="peer-checked:text-blue-400">Male</span>
+            </label>
 
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                {...register("gender", { required: true })}
+                value="female"
+                className="hidden peer"
+              />
+              <div className="w-5 h-5 rounded-full border-2 border-gray-400 peer-checked:border-pink-500 peer-checked:bg-pink-500 transition-all"></div>
+              <span className="peer-checked:text-pink-400">Female</span>
+            </label>
+          </div>
           {/* Email */}
           <div>
             <input
