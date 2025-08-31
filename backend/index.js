@@ -102,7 +102,7 @@ socketApp.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 const FRONTEND_URL = process.env.FRONTEND_URL; // deployed frontend
 const DEV_URL = process.env.DEV_URL;           // localhost frontend
 socketApp.use(cors({
-    origin: [FRONTEND_URL, DEV_URL],
+    origin: [process.env.FRONTEND_URL, process.env.DEV_URL],
     credentials: true
 }));
 
@@ -119,10 +119,10 @@ socketApp.use('/api/search', searchRouter);
 socketApp.use('/api/chatprofile', chatProfile);
 
 // Optional: Frontend static serve (if backend is serving frontend)
-// socketApp.use(express.static(path.join(__dirname, "/frontend/dist")));
-// socketApp.get(/.*/, (req, res) => {
-//     res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-// });
+socketApp.use(express.static(path.join(__dirname, "/frontend/dist")));
+socketApp.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
 
 // 404 handler
 socketApp.use((req, res, next) => {
