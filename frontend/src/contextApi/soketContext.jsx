@@ -19,7 +19,8 @@ export const SocketContextProvider = ({ children }) => {
        useEffect(() => {
               if (user) {
                      // ✅ Backend socket server connect
-                     const socketInstance = io("http://localhost:8000", {
+                     // http://localhost:8000
+                     const socketInstance = io("https://chatify-backend-ybm4.onrender.com", {
                             query: { userId: user?._id },
                      });
 
