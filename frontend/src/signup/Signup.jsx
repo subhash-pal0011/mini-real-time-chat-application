@@ -208,7 +208,7 @@ const Signup = () => {
         formData.append("profilepic", data.profilepic[0]);
       }
 
-      const res = await axios.post("/api/signup", formData, {
+      const res = await axios.post("https://chatify-backend-ybm4.onrender.com/api/signup", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
