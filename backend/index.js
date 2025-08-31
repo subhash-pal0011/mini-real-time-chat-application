@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // CORS
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: 'https://conversationhub.onrender.com', credentials: true }));
 
 // Test route
 app.get('/', (req, res) => res.send('Server Running'));
@@ -44,11 +44,11 @@ app.use('/api/search', searchRouter);
 app.use('/api/chatprofile', chatProfile);
 
 
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-app.get(/.*/, (req , res) => {  // YE TARGET KEEGA HTML KE PAGE KO FRONTEND KE
-    res.sendFile(path.join(__dirname , "frontend" , "dist" , "index.html"))
-})
+// app.get(/.*/, (req , res) => {  // YE TARGET KEEGA HTML KE PAGE KO FRONTEND KE
+//     res.sendFile(path.join(__dirname , "frontend" , "dist" , "index.html"))
+// })
 
 
 app.use((req, res, next) => {  // PAGE NOT DEFINE KE LIYE HII
