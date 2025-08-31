@@ -50,51 +50,56 @@
 
 
 
-// backend/Socket/socket.js
-import express from "express";
-import http from "http";
-import { Server } from "socket.io";
+
+
+
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
 
 const app = express();
 const server = http.createServer(app);
 
-// CORS settings
+const userSocketMap = {}; // Track connected users
+
 const io = new Server(server, {
   cors: {
     origin: [
-      process.env.FRONTEND_URL || "http://localhost:5173",
-      process.env.PROD_URL || "https://conversationhub.onrender.com",
+      process.env.FRONTEND_URL || 'http://localhost:5173',
+      process.env.PROD_URL || 'https://conversationhub.onrender.com',
     ],
-    methods: ["GET", "POST"],
+    methods: ['GET', 'POST'],
     credentials: true,
   },
 });
 
-// Map to track connected users
-const userSocketMap = {};
+// Socket connection
+io.on('connection', (socket) => {
+  console.log('Socket connected:', socket.id);
 
-io.on("connection", (socket) => {
-  const userId = socket.handshake.auth?.userId; // recommended over query
+  const userId = socket.handshake.query.userId;
   if (userId) userSocketMap[userId] = socket.id;
 
-  console.log(`User connected: ${userId}, socketID: ${socket.id}`);
-  io.emit("getOnlineUser", Object.keys(userSocketMap));
+  // Emit online users
+  io.emit('getOnlineUser', Object.keys(userSocketMap));
 
-  socket.on("sendMessage", ({ to, message }) => {
-    const receiverSocketId = userSocketMap[to];
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("receiveMessage", { from: userId, message });
-    }
+  // Disconnect
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected:', socket.id);
+    if (userId) delete userSocketMap[userId];
+    io.emit('getOnlineUser', Object.keys(userSocketMap));
   });
 
-  socket.on("disconnect", () => {
-    if (userId) delete userSocketMap[userId];
-    io.emit("getOnlineUser", Object.keys(userSocketMap));
-    console.log(`User disconnected: ${userId}`);
+  // Send message
+  socket.on('sendMessage', ({ to, message }) => {
+    const receiverSocketId = userSocketMap[to];
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit('receiveMessage', { from: userId, message });
+    }
   });
 });
 
-// Helper
+// Helper to get receiver socket ID
 export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
 
 export { app, server, io };
