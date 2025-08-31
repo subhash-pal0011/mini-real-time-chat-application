@@ -45,7 +45,6 @@
 
 
 
-
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
@@ -54,51 +53,53 @@ const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
-       cors: {
-              origin: [
-                     "https://conversationhub.onrender.com", // production frontend
-                     "http://localhost:5173",               // local dev frontend
-              ],
-              methods: ["GET", "POST"],
-              credentials: true,
-       },
-       transports: ["websocket"], // force websocket transport
+    cors: {
+        origin: [
+            "https://conversationhub.onrender.com",
+            "http://localhost:5173",
+        ],
+        methods: ["GET", "POST"],
+        credentials: true,
+    },
 });
 
 const userSocketMap = {};
 
+// ✅ Socket connection
 io.on("connection", (socket) => {
-       const userId = socket.handshake.query.userId;
-       console.log("Socket connected. ID:", socket.id, "UserID:", userId);
+    const userId = socket.handshake.auth.userId || socket.handshake.query.userId;
+    console.log(`[SOCKET CONNECT] SocketID: ${socket.id}, UserID: ${userId}`);
 
-       if (userId) {
-              userSocketMap[userId] = socket.id;
-              console.log("User added to map:", userSocketMap);
-       }
+    if (userId) {
+        userSocketMap[userId] = socket.id;
+        console.log("[USER MAP] Updated:", userSocketMap);
+    }
 
-       // Emit online users
-       io.emit("getOnlineUser", Object.keys(userSocketMap));
-       console.log("Online users emitted:", Object.keys(userSocketMap));
+    // Emit online users
+    io.emit("getOnlineUser", Object.keys(userSocketMap));
+    console.log("[ONLINE USERS] Emitted:", Object.keys(userSocketMap));
 
-       // Listen to messages
-       socket.on("sendMessage", ({ to, message }) => {
-              console.log("sendMessage received:", { from: userId, to, message });
-              const receiverSocketId = userSocketMap[to];
-              if (receiverSocketId) {
-                     io.to(receiverSocketId).emit("receiveMessage", { from: userId, message });
-                     console.log("Message sent to:", receiverSocketId);
-              } else {
-                     console.log("Receiver not online:", to);
-              }
-       });
+    // Listen to messages
+    socket.on("sendMessage", ({ to, message }) => {
+        console.log(`[SEND MESSAGE] From: ${userId} To: ${to}`, message);
+        const receiverSocketId = userSocketMap[to];
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("receiveMessage", { from: userId, message });
+            console.log(`[MESSAGE SENT] To SocketID: ${receiverSocketId}`);
+        } else {
+            console.log(`[RECEIVER OFFLINE] UserID: ${to}`);
+        }
+    });
 
-       // Handle disconnect
-       socket.on("disconnect", () => {
-              console.log("Socket disconnected:", socket.id);
-              delete userSocketMap[userId];
-              io.emit("getOnlineUser", Object.keys(userSocketMap));
-              console.log("Online users after disconnect:", Object.keys(userSocketMap));
-       });
+    // Handle disconnect
+    socket.on("disconnect", (reason) => {
+        console.log(`[DISCONNECT] SocketID: ${socket.id}, Reason: ${reason}`);
+        if (userId) {
+            delete userSocketMap[userId];
+            io.emit("getOnlineUser", Object.keys(userSocketMap));
+            console.log("[ONLINE USERS] After disconnect:", Object.keys(userSocketMap));
+        }
+    });
 });
 
 export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
