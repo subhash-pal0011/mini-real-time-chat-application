@@ -89,7 +89,6 @@
 
 
 
-
 import User from "../models/Signup.js";
 import bcrypt from "bcryptjs";
 import jwtToken from "../token/Token.js";

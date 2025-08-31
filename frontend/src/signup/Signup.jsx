@@ -183,7 +183,6 @@
 
 
 
-
 import React from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -244,29 +243,16 @@ const Signup = () => {
         <p className="text-center text-gray-400 mb-6">Join us today, it only takes a few steps</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* Full Name */}
           <div>
-            <input
-              type="text"
-              placeholder="Full Name"
-              {...register("fullname", { required: "Full name is required" })}
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
+            <input type="text" placeholder="Full Name" {...register("fullname", { required: "Full name is required" })} className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
             {errors.fullname && <p className="text-sm text-red-400 mt-1">{errors.fullname.message}</p>}
           </div>
 
-          {/* Username */}
           <div>
-            <input
-              type="text"
-              placeholder="Username"
-              {...register("username", { required: "Username is required" })}
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
+            <input type="text" placeholder="Username" {...register("username", { required: "Username is required" })} className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
             {errors.username && <p className="text-sm text-red-400 mt-1">{errors.username.message}</p>}
           </div>
 
-          {/* Gender */}
           <div className="flex gap-6 items-center text-gray-300">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="radio" {...register("gender", { required: true })} value="male" className="hidden peer" />
@@ -281,55 +267,29 @@ const Signup = () => {
             </label>
           </div>
 
-          {/* Email */}
           <div>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              {...register("email", { required: "Email is required" })}
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
+            <input type="email" placeholder="you@example.com" {...register("email", { required: "Email is required" })} className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
             {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email.message}</p>}
           </div>
 
-          {/* Password */}
           <div>
-            <input
-              type="password"
-              placeholder="••••••••"
-              {...register("password", { required: "Password is required" })}
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-            />
+            <input type="password" placeholder="••••••••" {...register("password", { required: "Password is required" })} className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/30 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition" />
             {errors.password && <p className="text-sm text-red-400 mt-1">{errors.password.message}</p>}
           </div>
 
-          {/* Profile Picture */}
           <div>
             <label className="block text-gray-300 mb-2">Profile Picture</label>
-            <input
-              type="file"
-              accept="image/*"
-              {...register("profilepic")}
-              className="w-full text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-blue-500 file:to-purple-600 file:text-white hover:file:opacity-90 cursor-pointer"
-            />
+            <input type="file" accept="image/*" {...register("profilepic")} className="w-full text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-blue-500 file:to-purple-600 file:text-white hover:file:opacity-90 cursor-pointer" />
           </div>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-blue-600 via-indigo-700 to-purple-800 py-3 rounded-xl font-semibold text-lg shadow-lg hover:scale-105 hover:shadow-purple-700/50 transition-all duration-300 disabled:opacity-50 cursor-pointer"
-          >
+          <button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-blue-600 via-indigo-700 to-purple-800 py-3 rounded-xl font-semibold text-lg shadow-lg hover:scale-105 hover:shadow-purple-700/50 transition-all duration-300 disabled:opacity-50 cursor-pointer">
             {isSubmitting ? "Signing up..." : "Sign Up"}
           </button>
         </form>
 
-        {/* Login Link */}
         <p className="text-center text-gray-300 mt-6">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-400 hover:text-blue-500 hover:underline transition">
-            Log in
-          </Link>
+          <Link to="/login" className="text-blue-400 hover:text-blue-500 hover:underline transition">Log in</Link>
         </p>
       </div>
     </div>
