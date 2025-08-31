@@ -7,18 +7,20 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node modules
 node_modules
-dist
-dist-ssr
-*.local
+
+# Output / build
+# build/   <-- agar backend me copy kar ke serve kar rahe ho, is line ko comment ya hata do
+# dist/    <-- ye bhi hata do
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+.vscode/
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+

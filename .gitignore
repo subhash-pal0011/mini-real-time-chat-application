@@ -9,8 +9,6 @@ backend/.env
 frontend/.env
 
 # Build / dist
-frontend/build/
-frontend/dist/
 backend/build/
 dist/
 
@@ -24,3 +22,4 @@ yarn-error.log*
 # IDE
 .vscode/
 .DS_Store
+
