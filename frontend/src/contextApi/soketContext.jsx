@@ -52,9 +52,6 @@
 
 
 
-
-
-
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useUser } from "./UserContext";
@@ -68,11 +65,11 @@ export const SocketContextProvider = ({ children }) => {
   const [onlineUser, setOnlineUser] = useState([]);
 
   useEffect(() => {
-    if (!user?._id) return;
+    if (!user) return;
 
-    const socketInstance = io("https://chatify-backend-ybm4.onrender.com" || "http://localhost:8000", {
+    const socketInstance = io("https://chatify-backend-ybm4.onrender.com", {
       auth: { userId: user._id },
-      transports: ["websocket"]
+      transports: ["websocket"],
     });
 
     socketInstance.on("connect", () => console.log("[SOCKET] Connected:", socketInstance.id));
@@ -90,9 +87,5 @@ export const SocketContextProvider = ({ children }) => {
     };
   }, [user]);
 
-  return (
-    <SocketContext.Provider value={{ socket, onlineUser }}>
-      {children}
-    </SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={{ socket, onlineUser }}>{children}</SocketContext.Provider>;
 };
