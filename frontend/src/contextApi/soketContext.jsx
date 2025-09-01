@@ -54,7 +54,6 @@
 
 
 
-// frontend/context/SocketContext.js
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useUser } from "./UserContext";
@@ -70,14 +69,13 @@ export const SocketContextProvider = ({ children }) => {
   useEffect(() => {
     if (!user) return;
 
-    const socketInstance = io(process.env.VITE_BACKEND_URL || "http://localhost:3000", {
-      auth: { userId: user._id }, // recommended
+    const socketInstance = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:8000", {
+      auth: { userId: user._id },
       transports: ["websocket"],
     });
 
     socketInstance.on("connect", () => console.log("[SOCKET] Connected:", socketInstance.id));
     socketInstance.on("connect_error", (err) => console.error("[SOCKET] Error:", err));
-
     socketInstance.on("getOnlineUser", (users) => setOnlineUser(users || []));
     socketInstance.on("receiveMessage", ({ from, message }) => {
       console.log("Message received from", from, ":", message);
@@ -93,3 +91,5 @@ export const SocketContextProvider = ({ children }) => {
 
   return <SocketContext.Provider value={{ socket, onlineUser }}>{children}</SocketContext.Provider>;
 };
+
+

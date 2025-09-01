@@ -271,18 +271,16 @@
 
 
 
-
 import React, { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { IoSearch } from "react-icons/io5";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { GrLinkPrevious } from "react-icons/gr";
 import axios from "axios";
-import { useUser } from "../contextApi/UserContext";
-import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import GlobellyMessage from "../zustand/GlobellyMessage";
 import debounce from "lodash.debounce";
+import GlobellyMessage from "../zustand/GlobellyMessage";
+import { useUser } from "../contextApi/UserContext";
 import { useSocketContext } from "../contextApi/soketContext";
 
 const LeftContainer = () => {
@@ -293,8 +291,8 @@ const LeftContainer = () => {
   const [chatUser, setChatUser] = useState([]);
   const { user } = useUser();
   const { setSelectedConversation, clearUnread, unreadCounts } = GlobellyMessage();
-  const token = localStorage.getItem("chatApplication");
   const { onlineUser } = useSocketContext();
+  const token = localStorage.getItem("chatApplication");
 
   if (!user || !token) {
     return <div className="h-full flex items-center justify-center text-gray-400">Please login to see your chats</div>;
@@ -304,7 +302,7 @@ const LeftContainer = () => {
     if (!query) return setSearchUser([]);
     try {
       setLoading(true);
-      const res = await axios.get("/api/search", { headers: { Authorization: `Bearer ${token}` }, params: { search: query } });
+      const res = await axios.get("/api/search", { headers: { Authorization: `Bearer ${JSON.parse(token).token}` }, params: { search: query } });
       setSearchUser(Array.isArray(res.data.data) ? res.data.data : []);
       if (!res.data.data.length) toast.info("User not found!");
     } catch (e) {
@@ -315,15 +313,12 @@ const LeftContainer = () => {
 
   const debouncedSearch = useCallback(debounce(fetchSearchUsers, 500), []);
 
-  useEffect(() => {
-    if (searchValue) debouncedSearch(searchValue);
-    else setSearchUser([]);
-  }, [searchValue, debouncedSearch]);
+  useEffect(() => { if (searchValue) debouncedSearch(searchValue); else setSearchUser([]); }, [searchValue, debouncedSearch]);
 
   const fetchChaters = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/chatprofile", { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get("/api/chatprofile", { headers: { Authorization: `Bearer ${JSON.parse(token).token}` } });
       setChatUser(Array.isArray(res.data) ? res.data : []);
     } catch (e) { console.error("Chat fetch error:", e); setChatUser([]); }
     finally { setLoading(false); }
@@ -336,14 +331,14 @@ const LeftContainer = () => {
 
   const chatWithMessages = Array.isArray(chatUser)
     ? chatUser
-        .map((conv) => {
-          const otherParticipants = Array.isArray(conv.participants) ? conv.participants.filter(p => p._id !== user._id) : [];
-          if (otherParticipants.length === 0) return null;
-          const participant = otherParticipants[0];
-          return { ...participant, conversationId: conv.conversationId, lastUpdated: conv.lastUpdated };
-        })
-        .filter(Boolean)
-        .sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated))
+      .map((conv) => {
+        const otherParticipants = Array.isArray(conv.participants) ? conv.participants.filter(p => p._id !== user._id) : [];
+        if (!otherParticipants.length) return null;
+        const participant = otherParticipants[0];
+        return { ...participant, conversationId: conv.conversationId, lastUpdated: conv.lastUpdated };
+      })
+      .filter(Boolean)
+      .sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated))
     : [];
 
   return (
@@ -351,12 +346,10 @@ const LeftContainer = () => {
       {/* HEADER */}
       <div className="border-b border-gray-200 bg-white/70 backdrop-blur-md flex justify-between px-6 items-center sticky top-0 z-10 py-3">
         <h2 className="text-xl font-semibold text-gray-800 tracking-tight">Chats</h2>
-        <motion.img
+        <img
           src={user?.profilepic?.startsWith("/") ? `https://chatify-backend-ybm4.onrender.com${user.profilepic}` : user?.profilepic || "/default-avatar.png"}
           alt="profile"
           className="w-11 h-11 rounded-full object-cover cursor-pointer"
-          whileHover={{ scale: 1.15, boxShadow: "0 0 20px rgba(236,72,153,0.10), 0 0 40px rgba(214, 219, 226,0.6)" }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
         />
       </div>
 
@@ -398,7 +391,7 @@ const LeftContainer = () => {
               return (
                 <div key={c.conversationId} onClick={() => handleSelectChat(c)} className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer transition-all border-b border-gray-300 last:border-b-0">
                   <div className="relative">
-                    <img src={c?.profilepic?.startsWith("/") ? `https://chatify-backend-ybm4.onrender.com${c.profilepic}` : c?.profilepic || "/default-avatar.png"} alt={c.fullname} className="w-10 h-10 rounded-full object-cover" />
+                    <img src={c?.profilepic?.startsWith("/") ? `http://localhost:8000${c.profilepic}` : c?.profilepic || "/default-avatar.png"} alt={c.fullname} className="w-10 h-10 rounded-full object-cover" />
                     {isOnline && <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white bg-green-500"></span>}
                   </div>
                   <div className="flex flex-col">
