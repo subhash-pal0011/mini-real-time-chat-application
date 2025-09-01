@@ -10,8 +10,8 @@ const Logout = () => {
 
   const handleLogout = async () => {
     try {
-      const { data } = await axios.post("/api/logout");
-
+      const { data } = await axios.post("https://chatify-backend-ybm4.onrender.com/api/logout");
+      console.log(`logout : ${data}`)
       if (!data.success) {
         toast.error(data.message || "Logout failed");
         return;
