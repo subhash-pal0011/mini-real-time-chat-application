@@ -52,10 +52,9 @@
 
 
 
-
-import express from 'express';
-import http from 'http';
 import { Server } from 'socket.io';
+import http from 'http';
+import express from 'express';
 
 const app = express();
 const server = http.createServer(app);
@@ -66,31 +65,28 @@ const io = new Server(server, {
   cors: {
     origin: [
       process.env.FRONTEND_URL || 'http://localhost:5173',
-      process.env.PROD_URL || 'https://conversationhub.onrender.com',
+      process.env.PROD_URL || 'https://conversationhub.onrender.com'
     ],
     methods: ['GET', 'POST'],
-    credentials: true,
-  },
+    credentials: true
+  }
 });
 
-// Socket connection
 io.on('connection', (socket) => {
   console.log('Socket connected:', socket.id);
 
-  const userId = socket.handshake.query.userId;
+  // frontend se auth userId lena
+  const userId = socket.handshake.auth?.userId;
   if (userId) userSocketMap[userId] = socket.id;
 
-  // Emit online users
   io.emit('getOnlineUser', Object.keys(userSocketMap));
 
-  // Disconnect
   socket.on('disconnect', () => {
     console.log('Socket disconnected:', socket.id);
     if (userId) delete userSocketMap[userId];
     io.emit('getOnlineUser', Object.keys(userSocketMap));
   });
 
-  // Send message
   socket.on('sendMessage', ({ to, message }) => {
     const receiverSocketId = userSocketMap[to];
     if (receiverSocketId) {
@@ -99,7 +95,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// Helper to get receiver socket ID
 export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
 
 export { app, server, io };

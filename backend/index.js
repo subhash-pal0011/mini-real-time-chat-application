@@ -79,12 +79,15 @@
 
 
 
-import express from 'express'
+
+
+import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { server } from './Socket/socket.js'; // Socket server import
 
 // Routers
 import signupRouter from './router/SighnupRouter.js';
@@ -95,11 +98,10 @@ import getRouter from './router/GetMessageRouter.js';
 import searchRouter from './router/SearchRouter.js';
 import chatProfileRouter from './router/CahtProfileRouter.js';
 
-// Socket import
-import { app, server } from './Socket/socket.js';
-
 dotenv.config({ path: './backend/.env' });
 const __dirname = path.resolve();
+
+const app = express();
 
 // Middleware
 app.use(cookieParser());
@@ -108,17 +110,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // CORS
-app.use(
-    cors({
-        origin: [
-            process.env.FRONTEND_URL || 'http://localhost:5173',
-            process.env.PROD_URL || 'https://conversationhub.onrender.com',
-        ],
-        credentials: true,
-    })
-);
+app.use(cors({
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:5173',
+    process.env.PROD_URL || 'https://conversationhub.onrender.com'
+  ],
+  credentials: true
+}));
 
-// Root route (so visiting / won't 404)
+// Root
 app.get('/', (req, res) => res.send('Server is running!'));
 
 // API Routes
@@ -130,17 +130,14 @@ app.use('/api/getmessage', getRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/chatprofile', chatProfileRouter);
 
-// 404 for unknown routes
-app.use((req, res) => {
-    res.status(404).json({ success: false, message: 'Route not found!' });
-});
+// 404
+app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found!' }));
 
-// MongoDB connection
-mongoose
-    .connect(process.env.MONGO_URL)
-    .then(() => console.log('MongoDB connected ✅'))
-    .catch((err) => console.error('MongoDB connection error:', err.message));
+// MongoDB
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log('MongoDB connected ✅'))
+  .catch(err => console.error('MongoDB connection error:', err.message));
 
-const PORT = process.env.PORT || 3000;
+// Start server
+const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
