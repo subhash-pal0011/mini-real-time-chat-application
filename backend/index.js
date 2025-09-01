@@ -113,7 +113,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:5173',
-    process.env.PROD_URL || 'https://conversationhub.onrender.com'
+    process.env.DEV_URL || 'https://conversationhub.onrender.com'
   ],
   credentials: true
 }));
