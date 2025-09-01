@@ -80,14 +80,12 @@
 
 
 
-
 import express from 'express';
-import dotenv from 'dotenv';
 import path from 'path';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { server } from './Socket/socket.js'; // Socket server import
+import { server } from './Socket/socket.js';
 
 // Routers
 import signupRouter from './router/SighnupRouter.js';
@@ -98,9 +96,7 @@ import getRouter from './router/GetMessageRouter.js';
 import searchRouter from './router/SearchRouter.js';
 import chatProfileRouter from './router/CahtProfileRouter.js';
 
-dotenv.config({ path: './backend/.env' });
 const __dirname = path.resolve();
-
 const app = express();
 
 // Middleware
@@ -111,11 +107,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // CORS
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    process.env.DEV_URL || 'https://conversationhub.onrender.com'
-  ],
-  credentials: true
+    origin: ['http://localhost:5173', 'https://conversationhub.onrender.com'],
+    credentials: true,
 }));
 
 // Root
@@ -134,10 +127,10 @@ app.use('/api/chatprofile', chatProfileRouter);
 app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found!' }));
 
 // MongoDB
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log('MongoDB connected ✅'))
-  .catch(err => console.error('MongoDB connection error:', err.message));
+mongoose.connect('mongodb+srv://palsubhash046:miniChat123@cluster0.mrqrwna.mongodb.net/mydatabase?retryWrites=true&w=majority')
+    .then(() => console.log('MongoDB connected ✅'))
+    .catch(err => console.error('MongoDB connection error:', err.message));
 
 // Start server
-const PORT = process.env.PORT || 8000;
+const PORT = 8000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
