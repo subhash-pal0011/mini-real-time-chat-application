@@ -78,7 +78,7 @@ import {
 
 const ChatApplication = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-slate-800 to-gray-900 mt-8">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-slate-800 to-gray-900 mt-15">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[85vh] flex overflow-hidden">
         <PanelGroup direction="horizontal">
           {/* Left Sidebar */}
