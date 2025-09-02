@@ -13,7 +13,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user?._id) {
-      const socketInstance = io("http://localhost:8000", {
+      const socketInstance = io("https://chatify-z6db.onrender.com", {
         query: { userId: user._id },
         transports: ["websocket"], // ✅ only websocket
       });
