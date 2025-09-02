@@ -3,27 +3,26 @@ import LeftContainer from "./LeftContainer";
 import RightContainer from "./RightCintainer";
 
 const ChatApplication = () => {
-  const [leftWidth, setLeftWidth] = useState(280); // default width
+  const [leftWidth, setLeftWidth] = useState(280); // default sidebar width
   const [dragging, setDragging] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // mobile toggle
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // mobile sidebar toggle
 
+  // Mouse events for resizing
   const handleMouseDown = () => setDragging(true);
-
   const handleMouseMove = (e) => {
     if (!dragging) return;
     const newWidth = e.clientX;
-    if (newWidth > 200 && newWidth < 500) setLeftWidth(newWidth);
+    if (newWidth > 200 && newWidth < 500) setLeftWidth(newWidth); // limit width
   };
-
   const handleMouseUp = () => setDragging(false);
 
   return (
     <div
-      className={`flex h-screen select-none ${dragging ? "cursor-col-resize" : ""} mt-15`}
+      className={`flex h-screen select-none ${dragging ? "cursor-col-resize" : ""}`}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
-      {/* Sidebar */}
+      {/* Left Sidebar */}
       <div
         style={{ width: leftWidth }}
         className={`fixed md:relative z-20 h-full bg-white shadow-md border-r border-gray-200 transition-transform duration-300
@@ -32,14 +31,20 @@ const ChatApplication = () => {
         <LeftContainer closeSidebar={() => setIsSidebarOpen(false)} />
       </div>
 
-      {/* Resize bar (desktop only) */}
+      {/* Resize bar for desktop */}
       <div
         onMouseDown={handleMouseDown}
         className="hidden md:block w-1 bg-gray-300 hover:bg-blue-100 cursor-col-resize"
       ></div>
 
-      {/* Right container */}
-      <div className="flex-1 flex flex-col md:ml-[280px] bg-gray-50">
+      {/* Right Container */}
+      <div
+        className="flex-1 flex flex-col bg-gray-50"
+        style={{
+          marginLeft: isSidebarOpen || dragging ? leftWidth : 0,
+          transition: dragging ? "none" : "margin 0.3s ease",
+        }}
+      >
         {/* Mobile toggle button */}
         <div className="md:hidden flex items-center justify-between p-3 border-b border-gray-200 bg-white">
           <button
@@ -50,12 +55,15 @@ const ChatApplication = () => {
           </button>
         </div>
 
+        {/* Right chat area */}
         <RightContainer />
       </div>
     </div>
   );
 };
+
 export default ChatApplication;
+
 
 
 
