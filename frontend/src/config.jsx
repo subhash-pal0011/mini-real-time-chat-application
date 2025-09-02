@@ -1,0 +1,1 @@
+export const BACKEND_URL = "https://chatify-z6db.onrender.com";
