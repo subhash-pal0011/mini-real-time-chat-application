@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import LeftContainer from "./LeftContainer";
-import RightContainer from "./RightContainer";
+import RightContainer from "./RightCintainer";
 
 const ChatApplication = () => {
   const [leftWidth, setLeftWidth] = useState(280); // default width
@@ -55,10 +55,6 @@ const ChatApplication = () => {
     </div>
   );
 };
-
-export default ChatApplication;
-
-
 
 
 
