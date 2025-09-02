@@ -220,16 +220,14 @@
 
 
 
-
-
 import React, { useEffect, useRef } from "react";
+import GlobellyMessage from "../zustand/GlobellyMessage";
 import { TiMessages } from "react-icons/ti";
 import { useForm } from "react-hook-form";
 import { MdSend } from "react-icons/md";
 import axios from "axios";
 import { useUser } from "../contextApi/UserContext";
 import { useSocketContext } from "../contextApi/soketContext";
-import GlobellyMessage from "../zustand/GlobellyMessage";
 
 const RightContainer = () => {
   const { messages, setMessages, selectedConversation } = GlobellyMessage();
@@ -255,7 +253,11 @@ const RightContainer = () => {
     const fetchMessages = async () => {
       try {
         const res = await axios.get(`/api/getmessage/${selectedConversation._id}`);
-        setMessages(res.data.success ? res.data.messages || [] : []);
+        if (res.data.success) {
+          setMessages(res.data.messages || []);
+        } else {
+          setMessages([]);
+        }
       } catch (e) {
         console.error("Message fetch error:", e.response?.data?.message || e.message);
         setMessages([]);
@@ -265,9 +267,10 @@ const RightContainer = () => {
     fetchMessages();
   }, [selectedConversation, setMessages]);
 
-  // Real-time messages via socket
+  // Realtime messages via socket
   useEffect(() => {
     if (!socket) return;
+
     const handleReceiveMessage = (newMsg) => {
       const { selectedConversation, addMessage, incrementUnread } = GlobellyMessage.getState();
       const activeConvId = selectedConversation?.conversationId;
@@ -279,6 +282,7 @@ const RightContainer = () => {
         incrementUnread(msgConvId);
       }
     };
+
     socket.on("receiveMessage", handleReceiveMessage);
     return () => socket.off("receiveMessage", handleReceiveMessage);
   }, [socket]);
@@ -295,11 +299,13 @@ const RightContainer = () => {
       if (res.data.success) {
         const newMsg = res.data.data;
         GlobellyMessage.getState().addMessage(newMsg);
+
         socket.emit("sendMessage", {
           to: selectedConversation._id,
           from: currentUserId,
           ...newMsg,
         });
+
         setValue("text", "");
       }
     } catch (e) {
@@ -307,22 +313,22 @@ const RightContainer = () => {
     }
   };
 
-  // Scroll to bottom on new messages
+  // Scroll to bottom when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
       const parent = messagesEndRef.current.parentNode;
       parent.scrollTo({
-        top: parent.scrollHeight - 80,
+        top: parent.scrollHeight,
         behavior: "smooth",
       });
     }
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-gradient-to-br from-gray-50 to-gray-100 shadow-lg rounded-xl overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-gray-50 shadow-lg overflow-hidden">
       {/* Header */}
       {selectedConversation ? (
-        <div className="flex items-center gap-3 p-2 bg-white shadow-md border-b flex-shrink-0">
+        <div className="flex items-center gap-3 p-3 bg-white shadow-md border-b flex-shrink-0">
           <img
             src={
               selectedConversation?.profilepic?.startsWith("/")
@@ -342,7 +348,7 @@ const RightContainer = () => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center h-screen gap-2">
+        <div className="flex flex-col items-center justify-center h-full gap-2">
           <TiMessages className="text-6xl text-gray-300 animate-bounce" />
           <p className="text-center text-gray-500 text-lg">
             Select and start conversation
@@ -351,26 +357,32 @@ const RightContainer = () => {
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-9 flex flex-col space-y-4 bg-gray-100">
+      <div className="flex-1 overflow-y-auto p-6 flex flex-col space-y-4 bg-gray-100 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {Array.isArray(messages) && messages.length > 0 ? (
           messages.map((msg, index) => {
             const isSender = String(msg?.sender) === String(currentUserId);
             const createdAt = msg?.createdAt ? new Date(msg.createdAt) : new Date();
 
             return (
-              <div key={msg?._id || `temp-${index}`} className={`flex ${isSender ? "justify-end" : "justify-start"}`}>
+              <div
+                key={msg?._id || `temp-${index}`}
+                className={`flex ${isSender ? "justify-end" : "justify-start"}`}
+              >
                 <div
-                  className={`relative max-w-[45%] px-2 py-1 rounded-2xl text-sm shadow-lg transform transition-all duration-200 hover:scale-[1.02]
+                  className={`relative max-w-[60%] px-4 py-2 rounded-2xl text-sm shadow-lg
                     ${isSender
-                      ? "bg-gradient-to-br from-purple-500 to-purple-700 text-white rounded-br-none border border-gray-200"
-                      : "bg-gradient-to-br from-gray-50 to-gray-200 text-gray-800 rounded-bl-none border border-gray-200"
+                      ? "bg-gradient-to-br from-purple-500 to-purple-700 text-white rounded-br-none"
+                      : "bg-gray-200 text-gray-800 rounded-bl-none"
                     }`}
                 >
-                  <p className="whitespace-pre-wrap leading-relaxed font-medium break-words break-all">
-                    {msg?.message}
-                  </p>
-                  <span className={`text-[11px] mt-1 block text-right ${isSender ? "text-purple-100" : "text-gray-500"}`}>
-                    {createdAt.toLocaleDateString()} , {createdAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  <p className="whitespace-pre-wrap break-words">{msg?.message}</p>
+                  <span
+                    className={`text-[11px] mt-1 block text-right ${
+                      isSender ? "text-purple-100" : "text-gray-500"
+                    }`}
+                  >
+                    {createdAt.toLocaleDateString()} ,{" "}
+                    {createdAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </span>
                 </div>
               </div>
@@ -379,6 +391,7 @@ const RightContainer = () => {
         ) : selectedConversation ? (
           <p className="text-gray-400 text-sm text-center mt-2">No messages yet</p>
         ) : null}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -386,14 +399,14 @@ const RightContainer = () => {
       {selectedConversation && (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex items-end bg-white border border-gray-300 rounded-full px-3 py-1 shadow-sm mt-2 mx-4 mb-3"
+          className="flex items-end bg-white border border-gray-300 rounded-full px-3 py-2 shadow-sm mx-4 mb-4"
         >
           <textarea
             placeholder="Enter your message..."
             {...register("text")}
             rows={1}
             maxLength={100}
-            className="outline-none w-full resize-none bg-transparent text-base max-h-32 overflow-y-auto mb-1.5 cursor-pointer"
+            className="outline-none w-full resize-none bg-transparent text-base max-h-32 overflow-y-auto"
           />
           <button
             type="submit"
