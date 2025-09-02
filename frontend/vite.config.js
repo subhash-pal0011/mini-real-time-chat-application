@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: "https://chatify-backend-ybm4.onrender.com",
+        target: "http://localhost:8000",
         secure: false
       }
     }

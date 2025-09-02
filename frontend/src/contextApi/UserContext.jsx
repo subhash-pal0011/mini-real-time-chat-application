@@ -1,6 +1,6 @@
 //ISKE THRUGH HUM APNA DATA SARA GLOBELLY KR DIYE HII HUM KAHU BHI EXSES KR PAYENGE .
 
-// ISME DATA AYEGA KAHAA SE >> SIGNUP SE 
+// ISME DATA AYEGA KAHAA SE >> SIGNUP SE and login se kyuki hume kevl user ke info ko globelly krna hii.
 
 
 import { createContext, useContext, useState } from "react";

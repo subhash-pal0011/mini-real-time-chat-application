@@ -1,146 +1,169 @@
-// import express from 'express';
-// import dotenv from 'dotenv';
-// import mongoose from 'mongoose';
-// import cookieParser from 'cookie-parser';
-// import cors from 'cors';
-// import path from 'path'; // 👉 img ike liye
+// import express from "express";
+// import dotenv from "dotenv";
+// import mongoose from "mongoose";
+// import cookieParser from "cookie-parser";
+// import cors from "cors";
+// import path from "path";
+// import http from "http";
+// import { setupSocket, io } from "./Socket/socket.js";
 
 // // Routers
-// import router from './router/SighnupRouter.js';
-// import loginRouter from './router/LoginRouter.js';
-// import logoutRouter from './router/LogoutRouter.js';
-// import postRouter from './router/PostMessageRouter.js';
-// import getRouter from './router/GetMessageRouter.js';
-// import searchRouter from './router/SearchRouter.js';
-// import chatProfile from './router/CahtProfileRouter.js';
-// // Socket
-// import { app, server  } from './Socket/socket.js';
+// import router from "./router/SighnupRouter.js";
+// import loginRouter from "./router/LoginRouter.js";
+// import logoutRouter from "./router/LogoutRouter.js";
+// import postRouter from "./router/PostMessageRouter.js";
+// import getRouter from "./router/GetMessageRouter.js";
+// import searchRouter from "./router/SearchRouter.js";
+// import chatProfile from "./router/CahtProfileRouter.js";
 
+// dotenv.config();
+
+// const app = express();
+// const server = http.createServer(app);
+
+// // ✅ Setup socket.io
+// setupSocket(server);
 
 // const __dirname = path.resolve();
 
-// // dotenv.config();
-// dotenv.config({ path: "./backend/.env" });
-
-// // Middleware
+// // ✅ Middlewares
 // app.use(cookieParser());
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
-// app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+// app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-// // CORS
-// app.use(cors({ origin: 'https://conversationhub.onrender.com', credentials: true }));
+// app.use(
+//        cors({
+//               origin: "http://localhost:5173",
+//               credentials: true,
+//        })
+// );
 
-// // Test route
-// app.get('/', (req, res) => res.send('Server Running'));
+// // ✅ Test route backend
+// app.get("/", (req, res) => res.send("Server Running ✅"));
 
-// // API Routes
-// app.use('/api/signup', router);
-// app.use('/api/login', loginRouter);
-// app.use('/api/logout', logoutRouter);
-// app.use('/api/postmessage', postRouter);
-// app.use('/api/getmessage', getRouter);
-// app.use('/api/search', searchRouter);
-// app.use('/api/chatprofile', chatProfile);
+// // ✅ Routes
+// app.use("/api/signup", router);
+// app.use("/api/login", loginRouter);
+// app.use("/api/logout", logoutRouter);
+// app.use("/api/postmessage", postRouter);
+// app.use("/api/getmessage", getRouter);
+// app.use("/api/search", searchRouter);
+// app.use("/api/chatprofile", chatProfile);
 
+// // Static files serve karo
+// app.use(express.static(path.join(process.cwd(), "frontend", "dist")));
 
-// // app.use(express.static(path.join(__dirname, "/frontend/dist")));
-
-// // app.get(/.*/, (req , res) => {  // YE TARGET KEEGA HTML KE PAGE KO FRONTEND KE
-// //     res.sendFile(path.join(__dirname , "frontend" , "dist" , "index.html"))
-// // })
-
-
-// app.use((req, res, next) => {  // PAGE NOT DEFINE KE LIYE HII
-//     res.status(404).json({
-//         success: false,
-//         message: "Route not found, please try again!"
-//     });
+// // Catch-all route
+// app.get(/.*/, (req, res) => {
+//        res.sendFile(path.join(process.cwd(), "frontend", "dist", "index.html"));
 // });
 
-// // MongoDB
-// const PORT = process.env.PORT || 3000;
+// // ✅ 404 handler
+// app.use((req, res) => {
+//        res.status(404).json({
+//               success: false,
+//               message: "Route not found, please try again!",
+//        });
+// });
 
-// mongoose.connect(process.env.MONGO_URL)
-//     .then(() => console.log('MongoDB connected ✅'))
-//     .catch(err => console.error('MongoDB connection error:', err.message));
+// // ✅ MongoDB connection (new style, no deprecation warnings)
+// const PORT = process.env.PORT || 8000;
 
-// server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// mongoose
+//        .connect(process.env.MONGO_URL)
+//        .then(() => console.log("MongoDB connected ✅"))
+//        .catch((err) => console.error("MongoDB connection error:", err.message));
+
+// // ✅ Start server
+// server.listen(PORT, () =>
+//        console.log(`Server running on http://localhost:${PORT}`)
+// );
+
+// // ✅ Export app, server, io
+// export { app, server, io };
 
 
 
 
-
-
-
-// backend/index.js
-
-
-
-
-import express from 'express';
-import path from 'path';
-import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { server } from './Socket/socket.js'; // Socket server import
-
-// Load env variables
-dotenv.config();
+import express from "express";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import path from "path";
+import http from "http";
+import { setupSocket, io } from "./Socket/socket.js";
 
 // Routers
-import signupRouter from './router/SighnupRouter.js';
-import loginRouter from './router/LoginRouter.js';
-import logoutRouter from './router/LogoutRouter.js';
-import postRouter from './router/PostMessageRouter.js';
-import getRouter from './router/GetMessageRouter.js';
-import searchRouter from './router/SearchRouter.js';
-import chatProfileRouter from './router/CahtProfileRouter.js';
+import router from "./router/SighnupRouter.js";
+import loginRouter from "./router/LoginRouter.js";
+import logoutRouter from "./router/LogoutRouter.js";
+import postRouter from "./router/PostMessageRouter.js";
+import getRouter from "./router/GetMessageRouter.js";
+import searchRouter from "./router/SearchRouter.js";
+import chatProfile from "./router/CahtProfileRouter.js";
+
+dotenv.config();
 
 const app = express();
+const server = http.createServer(app);
+
+// ✅ Setup socket.io
+setupSocket(server);
+
 const __dirname = path.resolve();
 
-// Middleware
+// ✅ Middlewares
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-// ✅ Correct CORS
-app.use(cors({
-  origin: [process.env.DEV_URL, process.env.FRONTEND_URL],
-  credentials: true,
-}));
+app.use(
+       cors({
+              origin: "http://localhost:5173",
+              credentials: true,
+       })
+);
 
-// API Routes
-app.use('/api/signup', signupRouter);
-app.use('/api/login', loginRouter);
-app.use('/api/logout', logoutRouter);
-app.use('/api/postmessage', postRouter);
-app.use('/api/getmessage', getRouter);
-app.use('/api/search', searchRouter);
-app.use('/api/chatprofile', chatProfileRouter);
+// ✅ API Routes
+app.use("/api/signup", router);
+app.use("/api/login", loginRouter);
+app.use("/api/logout", logoutRouter);
+app.use("/api/postmessage", postRouter);
+app.use("/api/getmessage", getRouter);
+app.use("/api/search", searchRouter);
+app.use("/api/chatprofile", chatProfile);
 
-// Serve frontend in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-  });
-}
+// ✅ Serve React frontend
+app.use(express.static(path.join(process.cwd(), "frontend", "dist")));
 
-// Root route
-app.get('/', (req, res) => res.send('Server is running!'));
+// ✅ Catch-all route → React handles routing
+app.get(/.*/, (req, res) => {
+       res.sendFile(path.join(process.cwd(), "frontend", "dist", "index.html"));
+});
 
-// 404 handler
-app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found!' }));
+// ✅ 404 handler for undefined API routes
+app.use((req, res) => {
+       res.status(404).json({
+              success: false,
+              message: "Route not found, please try again!",
+       });
+});
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log('MongoDB connected ✅'))
-  .catch(err => console.error('MongoDB connection error:', err.message));
-
-// Start server
+// ✅ MongoDB connection
 const PORT = process.env.PORT || 8000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+mongoose
+       .connect(process.env.MONGO_URL)
+       .then(() => console.log("MongoDB connected ✅"))
+       .catch((err) => console.error("MongoDB connection error:", err.message));
+
+// ✅ Start server
+server.listen(PORT, () =>
+       console.log(`Server running on http://localhost:${PORT}`)
+);
+
+// ✅ Export app, server, io
+export { app, server, io };

@@ -21,7 +21,6 @@ const Login = () => {
     try {
       const res = await axios.post("/api/login", data);
       const result = res.data;
-
       if (!result.success) {
         toast.error(result.message || "Login failed!");
         return;
@@ -124,4 +123,5 @@ const Login = () => {
 };
 
 export default Login;
+
 

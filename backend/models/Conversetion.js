@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const ConversationSchema = new mongoose.Schema({
-       participants: [  // ✅  EK JYADA PARTICIPATE KRNE VALE HO SKTE HII ISLIYE USE []
+       participants: [  // ✅  EK JYADA PARTICIPATE KRNE VALE HO SKTE HII ISLIYE USE[]
               {
                      type: mongoose.Schema.Types.ObjectId,
                      ref: "User",  // ✅ Reference to User schema

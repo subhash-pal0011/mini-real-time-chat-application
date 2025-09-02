@@ -15,10 +15,10 @@ const messageSchema = new mongoose.Schema({
               type: String,
               required: true,
        },
-       conversation :{ // converstion is liye rkhe ki pata chal ske koon sender hii koon resiver.
-              type : mongoose.Schema.Types.ObjectId,
-              ref : 'Conversation',
-              default : []
+       conversation: { // 👉 We keep a Conversation so that we can know who the sender is and who the receiver is
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Conversation',
+              default: []
        }
 }, { timestamps: true });
 

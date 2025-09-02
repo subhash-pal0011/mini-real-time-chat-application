@@ -1,14 +1,13 @@
 import Conversation from "../models/Conversetion.js";
 import Message from "../models/Message.js";
-import { io, getReceiverSocketId } from "../Socket/socket.js"; // ✅ import kiya
+import { io, getReceiverSocketId } from "../Socket/socket.js"; 
 
 export const PostMessage = async (req, res) => {
   try {
     const { message } = req.body;
     const receiver = req.params.id;
-    const sender = req.user._id; // ✅ Login user
+    const sender = req.user._id; 
 
-    // ✅ Conversation check
     let conversation = await Conversation.findOne({
       participants: { $all: [sender, receiver] }
     });
@@ -19,7 +18,6 @@ export const PostMessage = async (req, res) => {
       });
     }
 
-    // ✅ Message create
     const newMessage = new Message({
       sender,
       receiver,
@@ -29,7 +27,6 @@ export const PostMessage = async (req, res) => {
 
     const savedMessage = await newMessage.save();
 
-    // ✅ Real-time socket emit
     const receiverSocketId = getReceiverSocketId(receiver);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("receiveMessage", {
@@ -43,7 +40,6 @@ export const PostMessage = async (req, res) => {
       });
     }
 
-    // ✅ Response back to sender
     res.status(201).json({
       success: true,
       message: "Message sent ✅",
