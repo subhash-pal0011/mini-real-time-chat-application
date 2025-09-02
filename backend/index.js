@@ -83,7 +83,11 @@ import path from 'path';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import { server } from './Socket/socket.js'; // Socket server import
+
+// Load env variables
+dotenv.config();
 
 // Routers
 import signupRouter from './router/SighnupRouter.js';
@@ -103,9 +107,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// CORS for development
+// ✅ Correct CORS
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://conversationhub.onrender.com'],
+  origin: [process.env.DEV_URL, process.env.FRONTEND_URL],
   credentials: true,
 }));
 
@@ -126,18 +130,19 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Root route (for dev)
+// Root route
 app.get('/', (req, res) => res.send('Server is running!'));
 
-// 404 for unknown routes
+// 404 handler
 app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found!' }));
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://palsubhash046:miniChat123@cluster0.mrqrwna.mongodb.net/mydatabase?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('MongoDB connected ✅'))
   .catch(err => console.error('MongoDB connection error:', err.message));
 
 // Start server
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 
