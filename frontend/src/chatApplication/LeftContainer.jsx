@@ -269,6 +269,10 @@
 
 
 
+
+
+
+
 import React, { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { IoSearch } from "react-icons/io5";
@@ -393,9 +397,9 @@ const LeftContainer = () => {
         <h2 className="text-xl font-semibold text-gray-800 tracking-tight">Chats</h2>
         <motion.img
           src={
-            user?.profilepic?.startsWith("/")
-              ? `${BACKEND_URL}${user.profilepic}`
-              : user?.profilepic || "/default-avatar.png"
+            u?.profilepic?.startsWith("/")
+              ? `${BACKEND_URL}${u.profilepic}`
+              : u?.profilepic || "/default-avatar.png"
           }
           alt="profile"
           className="w-11 h-11 rounded-full object-cover cursor-pointer"
