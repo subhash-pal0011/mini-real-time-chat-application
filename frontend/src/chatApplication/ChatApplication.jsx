@@ -76,7 +76,7 @@ import {
   PanelResizeHandle,
 } from "react-resizable-panels";
 
-const Dashboard = () => {
+const ChatApplication = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-slate-800 to-gray-900 mt-8">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[85vh] flex overflow-hidden">
@@ -103,4 +103,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default ChatApplication;
