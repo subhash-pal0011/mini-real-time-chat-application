@@ -26,7 +26,7 @@ const ChatApplication = () => {
       {/* Sidebar */}
       <div
         style={{ width: leftWidth }}
-        className={`fixed md:relative z-20 h-full bg-white shadow-md border-r border-gray-200 transition-transform duration-300
+        className={`fixed md:relative z-20 h-full bg-white shadow-md border-r border-gray-200 transition-transform duration-300 mt-15
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         <LeftContainer closeSidebar={() => setIsSidebarOpen(false)} />
