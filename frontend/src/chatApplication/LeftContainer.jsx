@@ -188,7 +188,7 @@ const LeftContainer = () => {
                     <img
                       src={
                         u?.profilepic?.startsWith("/")
-                          ? `https://chatify-z6db.onrender.com${u.profilepic}`
+                          ? `http://localhost:8000${u.profilepic}`
                           : u?.profilepic || "/default-avatar.png"
                       }
                       alt={u.fullname}
