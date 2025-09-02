@@ -220,208 +220,71 @@
 
 
 
+import React, { useState } from "react";
+import LeftContainer from "./LeftContainer";
+import RightContainer from "./RightContainer";
 
+const ChatApplication = () => {
+  const [leftWidth, setLeftWidth] = useState(280); // default width
+  const [dragging, setDragging] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // mobile toggle
 
+  const handleMouseDown = () => setDragging(true);
 
-
-
-import React, { useEffect, useRef } from "react";
-import GlobellyMessage from "../zustand/GlobellyMessage";
-import { TiMessages } from "react-icons/ti";
-import { useForm } from "react-hook-form";
-import { MdSend } from "react-icons/md";
-import axios from "axios";
-import { useUser } from "../contextApi/UserContext";
-import { useSocketContext } from "../contextApi/soketContext";
-
-const RightContainer = () => {
-  const { messages, setMessages, selectedConversation } = GlobellyMessage();
-  const { user } = useUser();
-  const { socket, onlineUser } = useSocketContext();
-  const messagesEndRef = useRef(null);
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { isSubmitting },
-  } = useForm();
-  const watchedText = watch("text", "");
-  const currentUserId = user?._id;
-
-  // Fetch messages when conversation changes
-  useEffect(() => {
-    if (!selectedConversation?._id) return;
-
-    const fetchMessages = async () => {
-      try {
-        const res = await axios.get(`/api/getmessage/${selectedConversation._id}`);
-        if (res.data.success) {
-          setMessages(res.data.messages || []);
-        } else {
-          setMessages([]);
-        }
-      } catch (e) {
-        console.error("Message fetch error:", e.response?.data?.message || e.message);
-        setMessages([]);
-      }
-    };
-
-    fetchMessages();
-  }, [selectedConversation, setMessages]);
-
-  // Real-time messages from socket
-  useEffect(() => {
-    if (!socket) return;
-    const handleReceiveMessage = (newMsg) => {
-      const { selectedConversation, addMessage, incrementUnread } = GlobellyMessage.getState();
-      const activeConvId = selectedConversation?.conversationId;
-      const msgConvId = newMsg.conversation || newMsg.conversationId;
-
-      if (msgConvId === activeConvId) {
-        addMessage(newMsg);
-      } else {
-        incrementUnread(msgConvId);
-      }
-    };
-    socket.on("receiveMessage", handleReceiveMessage);
-    return () => socket.off("receiveMessage", handleReceiveMessage);
-  }, [socket]);
-
-  const onSubmit = async (data) => {
-    if (!selectedConversation?._id || !data.text?.trim()) return;
-
-    try {
-      const res = await axios.post(
-        `/api/postmessage/${selectedConversation._id}`,
-        { message: data.text.trim() }
-      );
-
-      if (res.data.success) {
-        const newMsg = res.data.data;
-        GlobellyMessage.getState().addMessage(newMsg);
-
-        socket.emit("sendMessage", {
-          to: selectedConversation._id,
-          from: currentUserId,
-          ...newMsg,
-        });
-
-        setValue("text", "");
-      }
-    } catch (e) {
-      console.error("Message send error:", e.response?.data?.message || e.message);
+  const handleMouseMove = (e) => {
+    if (!dragging) return;
+    const newWidth = e.clientX;
+    if (newWidth > 200 && newWidth < 500) {
+      setLeftWidth(newWidth);
     }
   };
 
-  // Auto-scroll to last message
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      const parent = messagesEndRef.current.parentNode;
-      parent.scrollTo({
-        top: parent.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [messages]);
+  const handleMouseUp = () => setDragging(false);
 
   return (
-    <div className="flex flex-col h-full w-full bg-gradient-to-br from-gray-50 to-gray-100 shadow-lg rounded-xl overflow-hidden">
-      {/* Header */}
-      {selectedConversation ? (
-        <div className="flex items-center gap-3 p-3 bg-white shadow-md border-b flex-shrink-0">
-          <img
-            src={
-              selectedConversation?.profilepic?.startsWith("/")
-                ? `https://chatify-z6db.onrender.com${selectedConversation.profilepic}`
-                : selectedConversation?.profilepic || "/default-avatar.png"
-            }
-            alt={selectedConversation?.fullname || "User"}
-            className="w-12 h-12 rounded-full object-cover"
-          />
-          <div>
-            <h2 className="text-lg font-semibold text-gray-800">
-              {selectedConversation?.fullname || "Unknown User"}
-            </h2>
-            {onlineUser.includes(selectedConversation?._id) && (
-              <p className="text-sm text-green-500 font-medium">Online</p>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center h-full gap-2">
-          <TiMessages className="text-6xl text-gray-300 animate-bounce" />
-          <p className="text-center text-gray-500 text-lg">Select and start conversation</p>
-        </div>
-      )}
-
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col space-y-3">
-        {Array.isArray(messages) && messages.length > 0 ? (
-          messages.map((msg, index) => {
-            const isSender = String(msg?.sender) === String(currentUserId);
-            const createdAt = msg?.createdAt ? new Date(msg.createdAt) : new Date();
-
-            return (
-              <div key={msg?._id || `temp-${index}`} className={`flex ${isSender ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`relative max-w-[80%] md:max-w-[45%] px-3 py-2 rounded-2xl text-sm shadow-lg transform transition-all duration-200 hover:scale-[1.02] ${
-                    isSender
-                      ? "bg-gradient-to-br from-purple-500 to-purple-700 text-white rounded-br-none border border-gray-200"
-                      : "bg-gradient-to-br from-gray-50 to-gray-200 text-gray-800 rounded-bl-none border border-gray-200"
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap leading-relaxed font-medium break-words break-all">
-                    {msg?.message}
-                  </p>
-                  <span
-                    className={`text-[11px] mt-1 block text-right ${isSender ? "text-purple-100" : "text-gray-500"}`}
-                  >
-                    {createdAt.toLocaleDateString()} ,{" "}
-                    {createdAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                  </span>
-                </div>
-              </div>
-            );
-          })
-        ) : selectedConversation ? (
-          <p className="text-gray-400 text-sm text-center mt-2">No messages yet</p>
-        ) : null}
-        <div ref={messagesEndRef} />
+    <div
+      className={`flex h-screen select-none ${dragging ? "cursor-col-resize" : ""}`}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
+      {/* Sidebar */}
+      <div
+        style={{ width: leftWidth }}
+        className={`fixed md:relative z-20 h-full bg-white shadow-md border-r border-gray-200 transition-transform duration-300
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+      >
+        <LeftContainer />
       </div>
 
-      {/* Input */}
-      {selectedConversation && (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex items-end bg-white border-t border-gray-300 px-3 py-2 shadow-md sticky bottom-0 z-10"
-        >
-          <textarea
-            placeholder="Enter your message..."
-            {...register("text")}
-            rows={1}
-            maxLength={500}
-            className="outline-none w-full resize-none bg-transparent text-base max-h-32 overflow-y-auto mb-1.5"
-          />
+      {/* Resize bar for desktop */}
+      <div
+        onMouseDown={handleMouseDown}
+        className="hidden md:block w-1 bg-gray-300 hover:bg-blue-100 cursor-col-resize"
+      ></div>
+
+      {/* Right container */}
+      <div className="flex-1 flex flex-col md:ml-[280px] bg-gray-50">
+        {/* Mobile toggle button */}
+        <div className="md:hidden flex items-center justify-between p-3 border-b border-gray-200 bg-white">
           <button
-            type="submit"
-            className="ml-2 p-2 rounded-full text-blue-500 hover:text-blue-600 hover:bg-blue-100 transition disabled:opacity-50"
-            disabled={isSubmitting || !watchedText?.trim()}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-gray-600 font-semibold"
           >
-            {isSubmitting ? (
-              <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <MdSend className="text-xl" />
-            )}
+            {isSidebarOpen ? "Close" : "Chats"}
           </button>
-        </form>
-      )}
+        </div>
+
+        <RightContainer />
+      </div>
     </div>
   );
 };
 
-export default RightContainer;
+export default ChatApplication;
+
+
+
+
 
 
 
