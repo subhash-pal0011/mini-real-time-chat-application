@@ -59,7 +59,7 @@ const Logout = () => {
   const handleLogout = async () => {
     try {
       const { data } = await axios.post(
-        "https://chatify-backend-ybm4.onrender.com/api/logout",
+        "/api/logout",
         {},
         { withCredentials: true } // ✅ important for cookies
       );
