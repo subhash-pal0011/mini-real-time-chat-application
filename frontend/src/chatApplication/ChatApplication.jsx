@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import LeftContainer from "./LeftContainer";
-import RightContainer from "./RightCintainer";
+import RightContainer from "./RightContainer";
 
 const ChatApplication = () => {
   const [leftWidth, setLeftWidth] = useState(280); // default width
@@ -26,7 +26,7 @@ const ChatApplication = () => {
       {/* Sidebar */}
       <div
         style={{ width: leftWidth }}
-        className={`fixed md:relative z-20 h-full bg-white shadow-md border-r border-gray-200 transition-transform duration-300 mt-15
+        className={`fixed md:relative z-20 h-full bg-white shadow-md border-r border-gray-200 transition-transform duration-300
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         <LeftContainer closeSidebar={() => setIsSidebarOpen(false)} />
@@ -57,6 +57,7 @@ const ChatApplication = () => {
 };
 
 export default ChatApplication;
+
 
 
 
