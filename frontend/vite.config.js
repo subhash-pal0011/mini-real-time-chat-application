@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: "https://chatify-z6db.onrender.com/",
+        target: "https://chatify-z6db.onrender.com/ || http://localhost:8000",
         secure: false
       }
     }

@@ -38,7 +38,7 @@
 //       });
 
 //       const result = res.data || { success: false, message: "No response from server" };  // ✅ res se data nikala
-      
+
 //       // Backend se aaya message
 //       toast.success(result.message || "Signup successful 🎉");
 
@@ -181,6 +181,7 @@
 
 
 
+
 import React from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -206,12 +207,12 @@ const Signup = () => {
       formData.append("email", data.email);
       formData.append("gender", data.gender);
       formData.append("password", data.password);
-
       if (data.profilepic && data.profilepic[0]) {
         formData.append("profilepic", data.profilepic[0]);
       }
 
-      const res = await axios.post("/api/signup", formData, {
+
+      const res = await axios.post("http://localhost:8000/api/signup", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

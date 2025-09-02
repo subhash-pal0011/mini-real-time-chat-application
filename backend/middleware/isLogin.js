@@ -16,7 +16,7 @@ export const isLogin = async (req, res, next) => {
               }
               const user = await User.findById(verifyUser.userId).select('-password'); 
               if (!user) {
-                     return res.status(404).json({ success: false, message: "User not found ❌" });
+                     return res.status(404).json({ success: false, message: "User not found" });
               }
 
               req.user = user;
@@ -24,6 +24,6 @@ export const isLogin = async (req, res, next) => {
 
        } catch (error) {
               console.error("Auth middleware error:", error.message);
-              return res.status(500).json({ success: false, message: "Server error in authentication ❌" });
+              return res.status(500).json({ success: false, message: "Server error in authentication" });
        }
 };
