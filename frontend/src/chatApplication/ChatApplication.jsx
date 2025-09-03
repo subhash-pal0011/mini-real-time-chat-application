@@ -70,8 +70,7 @@
 
 import React, { useState } from "react";
 import LeftContainer from "./LeftContainer";
-import RightContainer from "./RightContainer"; // ✅ fix spelling
-
+import RightContainer from "./RightCintainer";
 const ChatApplication = () => {
   const [leftWidth, setLeftWidth] = useState(320); // default desktop width
   const [dragging, setDragging] = useState(false);
