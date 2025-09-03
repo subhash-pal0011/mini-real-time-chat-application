@@ -90,7 +90,7 @@ const ChatApplication = () => {
 
   return (
     <div
-      className={`flex h-screen select-none ${dragging ? "cursor-col-resize" : ""}`}
+      className={`flex h-screen select-none ${dragging ? "cursor-col-resize" : ""} mt-17`}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
