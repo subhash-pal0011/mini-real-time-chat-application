@@ -100,7 +100,7 @@ const ChatApplication = () => {
         className={`
           bg-white shadow-md border-r border-gray-200 transition-transform duration-300
           md:relative md:translate-x-0 md:flex-shrink-0
-          ${isSidebarOpen ? "translate-x-0 fixed z-20 h-full" : "-translate-x-full fixed z-20 h-full md:translate-x-0"}
+          ${isSidebarOpen ? "translate-x-0 fixed z-20 h-full" : "-translate-x-full fixed z-20 h-full md:translate-x-0"} flex-1 flex flex-col
         `}
       >
         <LeftContainer closeSidebar={() => setIsSidebarOpen(false)} />
