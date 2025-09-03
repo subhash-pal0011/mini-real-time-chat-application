@@ -7,7 +7,6 @@ const Footer = () => {
     <footer className="bg-gray-900 text-gray-300 border-t border-gray-800 ">
       <div className="container mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
 
-        {/* Brand Section */}
         <div>
           <Link
             to="/"
@@ -21,8 +20,6 @@ const Footer = () => {
             Connect, chat, and stay updated with your friends anytime.
           </p>
         </div>
-
-        {/* Quick Links */}
         <div>
           <h3 className="text-lg font-semibold text-emerald-400 mb-3">Quick Links</h3>
           <ul className="space-y-2">
@@ -37,8 +34,6 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-
-        {/* Social Media */}
         <div>
           <h3 className="text-lg font-semibold text-emerald-400 mb-3">Follow Us</h3>
           <div className="flex gap-5">
@@ -63,8 +58,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-
-      {/* Bottom Copyright */}
       <div className="bg-gray-800 py-4 mt-6">
         <p className="text-center text-gray-400 text-sm">
           © {new Date().getFullYear()} ChatZone. All rights reserved.
@@ -73,6 +66,4 @@ const Footer = () => {
     </footer>
   );
 };
-
 export default Footer;
-

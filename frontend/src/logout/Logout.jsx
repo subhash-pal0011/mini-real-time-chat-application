@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const { setUser, user } = useUser(); // context se user aur setuser
+  const { setUser, user } = useUser(); 
 
   const handleLogout = async () => {
     try {
@@ -15,11 +15,8 @@ const Logout = () => {
         toast.error(data.message || "Logout failed");
         return;
       }
-
-      //✅ localstorage mea jo iske chatApplication under save ho rha tha to remove krenge .
       localStorage.removeItem("chatApplication");
-      setUser(null);  // ✅ SETUSER JO HUM LOGIN KR RHE THE TO CONTEXT API MEA BHEJ RHE THE DATA TO USKE BHI NULL KRENGE .
-
+      setUser(null);  
       toast.success(`${user?.fullname || "User"} successfully logged out`);
       navigate("/login");
     } catch (e) {
@@ -40,6 +37,3 @@ const Logout = () => {
 };
 
 export default Logout;
-
-
-

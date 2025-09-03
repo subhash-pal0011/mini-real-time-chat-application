@@ -51,14 +51,10 @@ const Navbar = () => {
             </Link>
           )}
         </div>
-
-        {/* Mobile Menu Button */}
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
         </button>
       </div>
-
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-gray-800 px-6 py-4 space-y-4 text-lg font-medium">
           <Link
@@ -100,14 +96,4 @@ const Navbar = () => {
     </nav>
   );
 };
-
 export default Navbar;
-
-
-
-
-
-
-
-
-

@@ -4,10 +4,9 @@ import { useUser } from '../contextApi/UserContext';
 
 const IsLogin = () => {
        const { user } = useUser();
-       // Agar user login hai to child routes dikhayenge (Outlet)
-       // warna login page par redirect kar denge
-       return user ? <Outlet /> : <Navigate to="/login" replace />;  //👉 Simple bhaasha me:
-       // replace ka matlab hai "naya page add mat karo, current page ko  mtlb ab chat page pe mt jana"
+       // If the user is logged in, show the child routes (Outlet).
+       // otherwise, redirect to the login page.
+       return user ? <Outlet /> : <Navigate to="/login" replace />;  //👉 // 👉 In simple words: 
+       // replace means "don’t add a new page, just replace the current one" i.e. don’t go back to the chat page
 }
 export default IsLogin;
-

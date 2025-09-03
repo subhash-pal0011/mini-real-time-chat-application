@@ -5,19 +5,15 @@ import jwtToken from "../token/Token.js";
 export const Login = async (req, res) => {
        try {
               const { email, password } = req.body;
-
               const findData = await User.findOne({ email });
               if (!findData) {
                      return res.status(401).send({ success: false, message: "User does not exist" });
               }
-
               const comparePassword = bcrypt.compareSync(password, findData.password);
               if (!comparePassword) {
                      return res.status(400).send({ success: false, message: "Incorrect password " });
               }
-
               jwtToken(findData._id, res);
-
               res.status(200).send({
                      success: true,
                      message: "Login successful",

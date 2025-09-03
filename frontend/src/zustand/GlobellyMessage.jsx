@@ -1,49 +1,9 @@
-// import { create } from "zustand";
-
-// const GlobellyMessage = create((set) => ({
-//   messages: [],
-//   selectedConversation: null,
-//   unreadCounts: {},
-
-//   setMessages: (msgs) =>
-//     set(() => ({
-//       messages: Array.isArray(msgs) ? msgs : [],
-//     })),
-
-//   addMessage: (msg) =>
-//     set((state) => ({
-//       messages: [...(state.messages || []), msg],
-//     })),
-
-//   incrementUnread: (conversationId) =>
-//     set((state) => ({
-//       unreadCounts: {
-//         ...state.unreadCounts,
-//         [conversationId]: (state.unreadCounts[conversationId] || 0) + 1,
-//       },
-//     })),
-
-//   clearUnread: (conversationId) =>
-//     set((state) => {
-//       const updated = { ...state.unreadCounts };
-//       delete updated[conversationId];
-//       return { unreadCounts: updated };
-//     }),
-
-//   setSelectedConversation: (conv) => set({ selectedConversation: conv }),
-// }));
-
-// export default GlobellyMessage;
-
-
-
-
 import { create } from "zustand";
 
 const GlobellyMessage = create((set, get) => ({
-  messages: [], // default empty array
+  messages: [], 
   selectedConversation: null,
-  unreadCounts: {},
+  unreadCounts: {}, // message count
 
   setMessages: (msgs) => set({ messages: Array.isArray(msgs) ? msgs : [] }),
   
@@ -53,7 +13,7 @@ const GlobellyMessage = create((set, get) => ({
     })),
 
   setSelectedConversation: (conv) =>
-    set({ selectedConversation: conv, messages: [] }), // reset messages on new conversation
+    set({ selectedConversation: conv, messages: [] }),
 
   clearUnread: (conversationId) =>
     set((state) => ({
@@ -70,4 +30,3 @@ const GlobellyMessage = create((set, get) => ({
 }));
 
 export default GlobellyMessage;
-

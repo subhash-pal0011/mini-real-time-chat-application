@@ -56,7 +56,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="bg-gray-900 py-16 text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-emerald-400 mb-4">
           Ready to Start Chatting?

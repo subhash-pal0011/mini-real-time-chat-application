@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { useUser } from "../contextApi/UserContext";
 
 const Login = () => {
-  // DEKHO JB HUME CONTEXT API MEA DATA BHEJNA RHTA HII TO SET USER IMPORT KRKE DAL DETA HII DATA. AND JUB CONTEXT API SE DATA LENA RHTA HII TB USE KRTE HII SETT KE PHLE VALA.
   const { setUser } = useUser();
 
   const {
@@ -27,11 +26,9 @@ const Login = () => {
       }
 
       toast.success("Login successful!");
-
-      // hum LOCAL STORAGE MEA IS LIYE DAL DE RHE HII TAKI HUME BAR BAR LOGIN NA KRNA PADE
       localStorage.setItem("chatApplication", JSON.stringify(result.user));
 
-      setUser(result.user); // HUM YE SE BHI CONTEXTAPI MEA DATA DAL RHE HII.
+      setUser(result.user); 
 
       navigate("/chat");
     } catch (e) {
@@ -58,7 +55,6 @@ const Login = () => {
           Login to continue your journey
         </p>
 
-        {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2">Email</label>
@@ -123,5 +119,3 @@ const Login = () => {
 };
 
 export default Login;
-
-

@@ -4,13 +4,13 @@ const ConversationSchema = new mongoose.Schema({
        participants: [  // ✅  EK JYADA PARTICIPATE KRNE VALE HO SKTE HII ISLIYE USE[]
               {
                      type: mongoose.Schema.Types.ObjectId,
-                     ref: "User",  // ✅ Reference to User schema
+                     ref: "User",  
               },
        ],
-       messages: [      // ✅ Typo fix: message → messages
+       messages: [   
               {
                      type: mongoose.Schema.Types.ObjectId,
-                     ref: "Message",  // ✅ Reference to Message schema
+                     ref: "Message", 
               },
        ],
 }, { timestamps: true });
@@ -18,4 +18,3 @@ const ConversationSchema = new mongoose.Schema({
 const Conversation = mongoose.model("Conversation", ConversationSchema);
 
 export default Conversation;
-
