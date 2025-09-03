@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import LeftContainer from "./LeftContainer";
-import RightContainer from "./RightCintainer";
+import RightContainer from "./RightContainer";
 
 const ChatApplication = () => {
   const [leftWidth, setLeftWidth] = useState(300); // default width
@@ -20,7 +20,7 @@ const ChatApplication = () => {
     <div
       className={`flex h-screen bg-gray-100 select-none ${
         dragging ? "cursor-col-resize" : ""
-      }`}
+      } mt-15`}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
