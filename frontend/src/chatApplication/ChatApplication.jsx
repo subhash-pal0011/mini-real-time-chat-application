@@ -69,6 +69,7 @@
 
 
 
+
 import React, { useState } from "react";
 import LeftContainer from "./LeftContainer";
 import RightContainer from "./RightCintainer";
@@ -89,7 +90,7 @@ const ChatApplication = () => {
 
   return (
     <div
-      className={`flex h-screen select-none ${dragging ? "cursor-col-resize" : ""} mt-17`}
+      className={`flex h-screen select-none ${dragging ? "cursor-col-resize" : ""}`}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
@@ -97,9 +98,9 @@ const ChatApplication = () => {
       <div
         style={{ width: leftWidth }}
         className={`
-          fixed z-20 h-full bg-white shadow-md border-r border-gray-200 transition-transform duration-300
-          md:relative
-          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          bg-white shadow-md border-r border-gray-200 transition-transform duration-300
+          md:relative md:translate-x-0 md:flex-shrink-0
+          ${isSidebarOpen ? "translate-x-0 fixed z-20 h-full" : "-translate-x-full fixed z-20 h-full md:translate-x-0"}
         `}
       >
         <LeftContainer closeSidebar={() => setIsSidebarOpen(false)} />
@@ -112,13 +113,7 @@ const ChatApplication = () => {
       ></div>
 
       {/* Right Container */}
-      <div
-        className="flex-1 flex flex-col bg-gray-50"
-        style={{
-          marginLeft: isSidebarOpen ? leftWidth : 0,
-          transition: dragging ? "none" : "margin 0.3s ease",
-        }}
-      >
+      <div className="flex-1 flex flex-col bg-gray-50">
         {/* Mobile toggle button */}
         <div className="md:hidden flex items-center justify-between p-3 border-b border-gray-200 bg-white">
           <button
