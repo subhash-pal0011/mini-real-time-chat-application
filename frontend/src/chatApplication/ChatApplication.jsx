@@ -3,9 +3,7 @@ import LeftContainer from "./LeftContainer";
 import RightContainer from "./RightCintainer";
 
 const ChatApplication = () => {
-  const [leftWidth, setLeftWidth] = useState(320); // default width
   const [dragging, setDragging] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // mobile toggle
 
   // Mouse events for resizing (desktop only)
   const handleMouseDown = () => setDragging(true);
@@ -26,9 +24,8 @@ const ChatApplication = () => {
       <div
         style={{ width: leftWidth }}
         className={`
-          bg-white shadow-md border-r border-gray-200 transition-transform duration-300
-          fixed inset-y-0 z-20
-          md:relative md:translate-x-0 md:flex-shrink-0
+          fixed z-20 h-full bg-white shadow-md border-r border-gray-200 transition-transform duration-300
+          md:relative
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
@@ -42,7 +39,13 @@ const ChatApplication = () => {
       ></div>
 
       {/* Right Container */}
-      <div className="flex-1 flex flex-col bg-gray-50">
+      <div
+        className="flex-1 flex flex-col bg-gray-50"
+        style={{
+          marginLeft: isSidebarOpen ? leftWidth : 0, // desktop left margin
+          transition: dragging ? "none" : "margin 0.3s ease",
+        }}
+      >
         {/* Mobile toggle button */}
         <div className="md:hidden flex items-center justify-between p-3 border-b border-gray-200 bg-white">
           <button
@@ -53,6 +56,7 @@ const ChatApplication = () => {
           </button>
         </div>
 
+        {/* Right chat area */}
         <RightContainer />
       </div>
     </div>
@@ -60,6 +64,5 @@ const ChatApplication = () => {
 };
 
 export default ChatApplication;
-
 
 
